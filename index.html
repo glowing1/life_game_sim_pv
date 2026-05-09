@@ -2,19 +2,19 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Westgate Life – Mall World</title>
+<title>Westgate Life – Pixel Mall World</title>
 <style>
 * { box-sizing: border-box; }
 body {
   margin: 0;
+  background: #1e293b;
+  color: #e5e7eb;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  background: #e5e7eb;
-  color: #111827;
 }
 header {
-  background: #111827;
-  color: #f9fafb;
-  padding: 12px 16px;
+  background: #020617;
+  color: #e5e7eb;
+  padding: 10px 14px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -22,13 +22,14 @@ header {
 header h1 { margin: 0; font-size: 18px; }
 header p { margin: 2px 0 0; font-size: 12px; color: #9ca3af; }
 #avatar {
-  width: 40px; height: 40px; border-radius: 999px;
+  width: 36px; height: 36px;
+  border-radius: 999px;
   background: radial-gradient(circle at 30% 30%, #fbbf24, #f97316);
   display: flex; align-items: center; justify-content: center;
   font-weight: 700; color: #111827;
 }
 #stats {
-  background: #111827;
+  background: #020617;
   color: #e5e7eb;
   padding: 6px 10px;
   display: flex;
@@ -38,82 +39,51 @@ header p { margin: 2px 0 0; font-size: 12px; color: #9ca3af; }
 }
 .stat { margin: 2px 4px; }
 main {
-  padding: 10px;
-  padding-bottom: 80px;
+  padding: 8px;
+  padding-bottom: 70px;
 }
 
-/* WORLD MAP */
-#world {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 4px;
-  margin-bottom: 10px;
-}
-.tile {
-  position: relative;
-  background: #d1d5db;
-  border-radius: 6px;
-  height: 60px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 11px;
-  text-align: center;
-  padding: 4px;
-}
-.tile.mall { background: #111827; color: #f9fafb; }
-.tile.house { background: #1d4ed8; color: #f9fafb; }
-.tile.job { background: #047857; color: #ecfdf5; }
-.tile.vacation { background: #7c3aed; color: #f5f3ff; }
-.tile.road { background: #9ca3af; color: #111827; }
-.tile .label { pointer-events: none; }
-.player {
-  position: absolute;
-  bottom: 2px;
-  right: 2px;
-  width: 16px;
-  height: 16px;
-  border-radius: 999px;
-  background: #f97316;
-  border: 2px solid #fef3c7;
-}
-
-/* PANELS */
-.panel {
-  background: white;
+/* Canvas container */
+#game-container {
+  background: #0f172a;
   border-radius: 10px;
-  padding: 10px;
-  margin-bottom: 8px;
-  box-shadow: 0 1px 3px rgba(15,23,42,0.15);
+  padding: 6px;
+  box-shadow: 0 0 0 1px #111827;
 }
-.panel h2 { margin: 0 0 6px; font-size: 16px; }
-.panel p { margin: 2px 0; font-size: 13px; }
+#game {
+  display: block;
+  margin: 0 auto;
+  image-rendering: pixelated;
+  border-radius: 6px;
+}
 
-button {
-  padding: 7px 11px;
-  margin: 3px 3px 3px 0;
+/* Info panel */
+#info-panel {
+  margin-top: 8px;
+  background: #020617;
+  border-radius: 10px;
+  padding: 8px;
+  font-size: 12px;
+}
+#info-title { font-weight: 600; margin-bottom: 4px; }
+#info-text { margin: 0 0 4px; }
+#info-actions button {
+  padding: 6px 10px;
+  margin: 2px 4px 2px 0;
   border-radius: 999px;
   border: none;
   cursor: pointer;
-  font-size: 12px;
+  font-size: 11px;
 }
 button.primary { background: #2563eb; color: white; }
 button.secondary { background: #e5e7eb; color: #111827; }
-button.ghost { background: transparent; border: 1px solid #d1d5db; }
+button.ghost { background: transparent; border: 1px solid #64748b; color: #e5e7eb; }
 
-.shop-card, .job-card, .house-card, .vacation-card, .item-card {
-  background: #f9fafb;
-  border-radius: 8px;
-  padding: 8px;
-  margin: 6px 0;
-  font-size: 13px;
-}
-
-/* MODALS */
+/* Modals */
 .modal {
   position: fixed;
   inset: 0;
-  background: rgba(15,23,42,0.55);
+  background: rgba(15,23,42,0.7);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -121,25 +91,35 @@ button.ghost { background: transparent; border: 1px solid #d1d5db; }
 }
 .modal.hidden { display: none; }
 .modal-content {
-  background: white;
-  border-radius: 14px;
-  padding: 14px;
+  background: #020617;
+  border-radius: 12px;
+  padding: 12px;
   width: 92%;
   max-width: 420px;
-  box-shadow: 0 10px 25px rgba(15,23,42,0.35);
+  box-shadow: 0 10px 25px rgba(15,23,42,0.8);
+  font-size: 13px;
 }
 .modal-content h3 { margin: 0 0 6px; font-size: 15px; }
-.modal-content p { margin: 3px 0; font-size: 13px; }
-.modal-content button { width: 100%; margin: 4px 0; text-align: left; }
+.modal-content p { margin: 3px 0; }
+.modal-content button {
+  width: 100%;
+  margin: 4px 0;
+  padding: 7px 10px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+}
 
-/* NAV */
+/* Nav */
 nav {
   position: fixed;
   bottom: 0; left: 0; right: 0;
-  background: #111827;
+  background: #020617;
   display: flex;
   justify-content: space-around;
   padding: 6px 0 8px;
+  border-top: 1px solid #111827;
 }
 nav button {
   background: transparent;
@@ -148,7 +128,7 @@ nav button {
   border: none;
 }
 
-/* SMALL ANIMATIONS */
+/* Small animation */
 .pulse {
   animation: pulse 0.25s ease-out;
 }
@@ -166,7 +146,7 @@ nav button {
     <div id="avatar">U</div>
     <div>
       <h1>Westgate Life</h1>
-      <p>Walk the mall, work, shop, upgrade your world.</p>
+      <p>Walk your pixel world. Work, shop, upgrade your life.</p>
     </div>
   </div>
 </header>
@@ -179,30 +159,19 @@ nav button {
 </section>
 
 <main>
-  <!-- WORLD MAP -->
-  <div class="panel">
-    <h2>🗺️ Mall World</h2>
-    <p style="font-size:12px;">Tap tiles to move. Go to shops, your house, jobs and vacations.</p>
-    <div id="world"></div>
+  <div id="game-container">
+    <!-- 320x240 canvas, scaled up with CSS -->
+    <canvas id="game" width="160" height="120"></canvas>
   </div>
 
-  <!-- CONTEXT PANEL -->
-  <div class="panel" id="context-panel">
-    <h2 id="context-title">🏠 Home Area</h2>
-    <p id="context-text" style="font-size:13px;">You’re near your tiny studio. Walk to the mall to shop or find a job.</p>
-    <div id="context-actions"></div>
-  </div>
-
-  <!-- INVENTORY / HOUSE ITEMS -->
-  <div class="panel">
-    <h2>🎒 Inventory & House</h2>
-    <p style="font-size:13px;">Items you buy can be placed in your house to “try them out”.</p>
-    <div id="inventory-list"></div>
-    <div id="house-items-list"></div>
+  <div id="info-panel">
+    <div id="info-title">🏠 Outside Your House</div>
+    <p id="info-text">Use arrow keys or WASD to move. Walk to the mall, house door, job desk or travel desk and press E to interact.</p>
+    <div id="info-actions"></div>
   </div>
 </main>
 
-<!-- INTERVIEW MODAL -->
+<!-- Interview Modal -->
 <div id="interview-modal" class="modal hidden">
   <div class="modal-content">
     <h3 id="interview-job-title">Job Interview</h3>
@@ -212,14 +181,14 @@ nav button {
   </div>
 </div>
 
-<!-- VACATION CLASS MODAL -->
+<!-- Travel Class Modal -->
 <div id="travel-modal" class="modal hidden">
   <div class="modal-content">
     <h3 id="travel-title">Choose Travel Class</h3>
     <p id="travel-desc">Pick how you want to travel.</p>
-    <button onclick="confirmTravel('Economy')" class="secondary">Economy – cheapest, normal happiness</button>
-    <button onclick="confirmTravel('Business')" class="secondary">Business – more expensive, extra happiness</button>
-    <button onclick="confirmTravel('First')" class="secondary">First Class – very expensive, big happiness</button>
+    <button class="secondary" onclick="confirmTravel('Economy')">Economy – cheapest, normal happiness</button>
+    <button class="secondary" onclick="confirmTravel('Business')">Business – more expensive, extra happiness</button>
+    <button class="secondary" onclick="confirmTravel('First')">First Class – very expensive, big happiness</button>
     <button class="secondary" onclick="closeTravel()">Cancel</button>
   </div>
 </div>
@@ -232,72 +201,112 @@ nav button {
 </nav>
 
 <script>
-/* ---------- STATE ---------- */
-let day = 1;
+/* ====== BASIC GAME STATE ====== */
 let money = 50;
 let happiness = 50;
 let house = { name: "Tiny Studio", tier: 1 };
 let job = null;
+let day = 1;
+
 let inventory = [];
 let houseItems = [];
-let playerPos = { x: 0, y: 2 }; // world grid position
 
-/* WORLD LAYOUT (5x5) */
-const worldWidth = 5;
-const worldHeight = 5;
-// simple labels for tiles
-// H = house area, M = mall entrance, F = fashion, B = beauty, C = cafe/cinema, J = job centre, V = vacation, R = road
-const worldMap = [
-  ["R","R","V","R","R"],
-  ["R","F","M","B","R"],
-  ["H","R","R","R","J"],
-  ["R","R","C","R","R"],
-  ["R","R","R","R","R"]
+const TILE = 8; // each tile is 8x8 pixels (scaled visually by CSS)
+const MAP_W = 20;
+const MAP_H = 15;
+
+/*
+Worlds:
+- "overworld": outside, with house + mall building
+- "mall": inside mall with shops + job desk + travel desk
+- "house": inside house where you can place furniture
+*/
+let world = "overworld";
+let player = { x: 4, y: 10 }; // tile coordinates
+
+// Simple collision maps (1 = wall, 0 = floor, special codes for objects)
+const overworldMap = [
+  "11111111111111111111",
+  "1..................1",
+  "1....HHH...........1",
+  "1....H.H...........1",
+  "1....HHH...........1",
+  "1..................1",
+  "1..........MMMMM...1",
+  "1..........M...M...1",
+  "1..........MMMMM...1",
+  "1..................1",
+  "1..P...............1",
+  "1..................1",
+  "1..................1",
+  "1..................1",
+  "11111111111111111111"
 ];
+// H = house building, P = player start, M = mall building
 
-/* DATA: SHOPS */
-const shops = {
-  F: { // fashion
-    name: "Fashion Wing",
-    items: [
-      { name: "Zara Outfit", price: 90, happiness: 5 },
-      { name: "River Island Jacket", price: 110, happiness: 6 },
-      { name: "Sneaker Store Trainers", price: 80, happiness: 4 }
-    ]
-  },
-  B: { // beauty / home
-    name: "Beauty & Home",
-    items: [
-      { name: "Boots Skincare Set", price: 40, happiness: 4 },
-      { name: "Home Store Lamp", price: 35, happiness: 3 },
-      { name: "Cosy Rug", price: 50, happiness: 4 }
-    ]
-  },
-  C: { // leisure
-    name: "Leisure Floor",
-    items: [
-      { name: "Cinema Ticket", price: 15, happiness: 5 },
-      { name: "Café Latte & Cake", price: 9, happiness: 3 },
-      { name: "Arcade Tokens", price: 12, happiness: 4 }
-    ]
-  },
-  M: { // ground essentials
-    name: "Ground Floor Essentials",
-    items: [
-      { name: "Superdrug Essentials", price: 18, happiness: 2 },
-      { name: "Primark Outfit", price: 30, happiness: 3 }
-    ]
-  }
+const mallMap = [
+  "11111111111111111111",
+  "1FFFFFFFFBBBBBTTTTT1",
+  "1F......B.....T...T1",
+  "1F......B.....T...T1",
+  "1F......B.....T...T1",
+  "1F......B.....T...T1",
+  "1F......B.....T...T1",
+  "1F......B.....T...T1",
+  "1FFFFFFFFBBBBBTTTTT1",
+  "1..................1",
+  "1....J.............1",
+  "1..................1",
+  "1.........EXIT.....1",
+  "1..................1",
+  "11111111111111111111"
+];
+// F = fashion area, B = beauty/home, T = leisure/travel, J = job desk, EXIT = door back
+
+const houseMap = [
+  "11111111111111111111",
+  "1..................1",
+  "1..................1",
+  "1....TT............1",
+  "1..................1",
+  "1..................1",
+  "1..................1",
+  "1..................1",
+  "1..................1",
+  "1..................1",
+  "1.........DOOR.....1",
+  "1..................1",
+  "1..................1",
+  "1..................1",
+  "11111111111111111111"
+];
+// TT = table area, DOOR = exit
+
+/* ====== SHOP / JOB / VACATION DATA ====== */
+const shopItems = {
+  fashion: [
+    { name: "Zara Outfit", price: 90, happiness: 5 },
+    { name: "River Island Jacket", price: 110, happiness: 6 },
+    { name: "Sneaker Store Trainers", price: 80, happiness: 4 }
+  ],
+  beauty: [
+    { name: "Boots Skincare Set", price: 40, happiness: 4 },
+    { name: "Home Store Lamp", price: 35, happiness: 3 },
+    { name: "Cosy Rug", price: 50, happiness: 4 }
+  ],
+  leisure: [
+    { name: "Cinema Ticket", price: 15, happiness: 5 },
+    { name: "Café Latte & Cake", price: 9, happiness: 3 },
+    { name: "Arcade Tokens", price: 12, happiness: 4 }
+  ]
 };
 
-/* DATA: JOBS (UNLOCKED BY TIER) */
 const jobs = [
   {
     id: "food_court",
     name: "Food Court Crew",
     salary: 40,
     tierRequired: 1,
-    description: "Starter job in the food court.",
     interview: {
       question: "A customer is upset about a wrong order. What do you do?",
       choices: [
@@ -312,7 +321,6 @@ const jobs = [
     name: "Fashion Store Assistant",
     salary: 60,
     tierRequired: 2,
-    description: "Help customers choose outfits.",
     interview: {
       question: "A customer can’t decide between two outfits. What do you do?",
       choices: [
@@ -327,7 +335,6 @@ const jobs = [
     name: "Café Barista",
     salary: 70,
     tierRequired: 3,
-    description: "Make drinks and chat with customers.",
     interview: {
       question: "What makes great service in a café?",
       choices: [
@@ -339,231 +346,253 @@ const jobs = [
   }
 ];
 
-/* DATA: HOUSES (TIER PROGRESSION) */
 const houses = [
-  { name: "Tiny Studio", cost: 0, tier: 1, description: "Small but yours." },
-  { name: "Small Apartment", cost: 300, tier: 2, description: "More space and nicer area." },
-  { name: "Townhouse", cost: 900, tier: 3, description: "Plenty of room and style." },
-  { name: "City View Apartment", cost: 1500, tier: 4, description: "Modern flat with a view." }
+  { name: "Tiny Studio", cost: 0, tier: 1 },
+  { name: "Small Apartment", cost: 300, tier: 2 },
+  { name: "Townhouse", cost: 900, tier: 3 },
+  { name: "City View Apartment", cost: 1500, tier: 4 }
 ];
 
-/* DATA: VACATIONS (UNLOCKED BY TIER) */
 const vacations = [
   { name: "Brighton Weekend", baseCost: 150, baseHappy: 10, tierRequired: 1 },
   { name: "Paris City Break", baseCost: 450, baseHappy: 20, tierRequired: 2 },
   { name: "Island Getaway", baseCost: 1200, baseHappy: 35, tierRequired: 3 }
 ];
 
-let pendingVacation = null; // for travel class modal
+let pendingVacation = null;
+let currentInterviewJob = null;
 
-/* ---------- UI HELPERS ---------- */
-function updateStats() {
-  const moneyEl = document.getElementById("money");
-  moneyEl.textContent = money;
-  moneyEl.classList.remove("pulse");
-  void moneyEl.offsetWidth;
-  moneyEl.classList.add("pulse");
+/* ====== CANVAS SETUP ====== */
+const canvas = document.getElementById("game");
+const ctx = canvas.getContext("2d");
 
-  document.getElementById("happiness").textContent = happiness;
-  document.getElementById("house").textContent = house.name;
-  document.getElementById("job").textContent = job ? job.name : "Unemployed";
+function tileAt(map, x, y) {
+  if (x < 0 || y < 0 || x >= MAP_W || y >= MAP_H) return "1";
+  return map[y].charAt(x);
 }
 
-function renderInventory() {
-  const inv = document.getElementById("inventory-list");
-  const houseInv = document.getElementById("house-items-list");
-  inv.innerHTML = "<h3 style='font-size:14px;margin:4px 0;'>Inventory</h3>";
-  houseInv.innerHTML = "<h3 style='font-size:14px;margin:4px 0;'>In Your House</h3>";
-
-  if (inventory.length === 0) {
-    inv.innerHTML += "<p style='font-size:12px;'>No items yet.</p>";
-  } else {
-    inventory.forEach((item, idx) => {
-      inv.innerHTML += `
-        <div class="item-card">
-          <strong>${item.name}</strong> – £${item.price}
-          <button class="secondary" onclick="placeInHouse(${idx})">Place in House</button>
-        </div>`;
-    });
-  }
-
-  if (houseItems.length === 0) {
-    houseInv.innerHTML += "<p style='font-size:12px;'>No items placed yet.</p>";
-  } else {
-    houseItems.forEach(item => {
-      houseInv.innerHTML += `<div class="item-card">${item.name} is in your house.</div>`;
-    });
-  }
+function currentMap() {
+  if (world === "overworld") return overworldMap;
+  if (world === "mall") return mallMap;
+  if (world === "house") return houseMap;
+  return overworldMap;
 }
 
-function placeInHouse(index) {
-  const item = inventory.splice(index, 1)[0];
-  houseItems.push(item);
-  alert(`You placed ${item.name} in your house to try it out.`);
-  renderInventory();
-}
+/* ====== DRAWING ====== */
+function draw() {
+  ctx.imageSmoothingEnabled = false;
+  ctx.fillStyle = "#0f172a";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-/* ---------- WORLD RENDERING ---------- */
-function renderWorld() {
-  const worldEl = document.getElementById("world");
-  worldEl.innerHTML = "";
-  for (let y = 0; y < worldHeight; y++) {
-    for (let x = 0; x < worldWidth; x++) {
-      const code = worldMap[y][x];
-      const tile = document.createElement("div");
-      tile.className = "tile";
-      if (code === "H") tile.classList.add("house");
-      if (code === "M" || code === "F" || code === "B" || code === "C") tile.classList.add("mall");
-      if (code === "J") tile.classList.add("job");
-      if (code === "V") tile.classList.add("vacation");
-      if (code === "R") tile.classList.add("road");
+  const map = currentMap();
 
-      let label = "";
-      if (code === "H") label = "Your House";
-      if (code === "M") label = "Mall Entrance";
-      if (code === "F") label = "Fashion";
-      if (code === "B") label = "Beauty & Home";
-      if (code === "C") label = "Leisure";
-      if (code === "J") label = "Job Centre";
-      if (code === "V") label = "Vacations";
-      if (code === "R") label = "Road";
-
-      tile.innerHTML = `<div class="label">${label}</div>`;
-      tile.onclick = () => movePlayer(x, y);
-
-      if (playerPos.x === x && playerPos.y === y) {
-        const p = document.createElement("div");
-        p.className = "player";
-        tile.appendChild(p);
+  for (let y = 0; y < MAP_H; y++) {
+    for (let x = 0; x < MAP_W; x++) {
+      const t = tileAt(map, x, y);
+      let color = "#1e293b"; // floor
+      if (t === "1") color = "#020617"; // wall
+      if (world === "overworld") {
+        if (t === "H") color = "#334155"; // house building
+        if (t === "M") color = "#4b5563"; // mall building
+        if (t === "P") color = "#1e293b";
       }
+      if (world === "mall") {
+        if (t === "F") color = "#7c3aed"; // fashion
+        if (t === "B") color = "#0ea5e9"; // beauty/home
+        if (t === "T") color = "#22c55e"; // leisure/travel
+        if (t === "J") color = "#f97316"; // job desk
+      }
+      if (world === "house") {
+        if (t === "T") color = "#facc15"; // table/furniture area
+        if (t === "D") color = "#1e293b";
+      }
+      ctx.fillStyle = color;
+      ctx.fillRect(x * TILE, y * TILE, TILE, TILE);
+    }
+  }
 
-      worldEl.appendChild(tile);
+  // Draw door / exit markers
+  if (world === "overworld") {
+    // house door
+    ctx.fillStyle = "#facc15";
+    ctx.fillRect(5 * TILE, 4 * TILE, TILE, TILE);
+    // mall door
+    ctx.fillStyle = "#f97316";
+    ctx.fillRect(12 * TILE, 8 * TILE, TILE, TILE);
+  }
+  if (world === "mall") {
+    // exit tile
+    ctx.fillStyle = "#f97316";
+    ctx.fillRect(10 * TILE, 12 * TILE, TILE, TILE);
+  }
+  if (world === "house") {
+    // door tile
+    ctx.fillStyle = "#f97316";
+    ctx.fillRect(10 * TILE, 10 * TILE, TILE, TILE);
+  }
+
+  // Draw player
+  ctx.fillStyle = "#f97316";
+  ctx.fillRect(player.x * TILE, player.y * TILE, TILE, TILE);
+  ctx.fillStyle = "#fef3c7";
+  ctx.fillRect(player.x * TILE + 2, player.y * TILE + 2, 4, 4);
+}
+
+/* ====== MOVEMENT ====== */
+const keys = {};
+window.addEventListener("keydown", e => {
+  keys[e.key.toLowerCase()] = true;
+  if (e.key === "e" || e.key === "E") {
+    interact();
+  }
+});
+window.addEventListener("keyup", e => {
+  keys[e.key.toLowerCase()] = false;
+});
+
+function update() {
+  let dx = 0, dy = 0;
+  if (keys["arrowup"] || keys["w"]) dy = -1;
+  if (keys["arrowdown"] || keys["s"]) dy = 1;
+  if (keys["arrowleft"] || keys["a"]) dx = -1;
+  if (keys["arrowright"] || keys["d"]) dx = 1;
+
+  if (dx !== 0 || dy !== 0) {
+    const map = currentMap();
+    const nx = player.x + dx;
+    const ny = player.y + dy;
+    const t = tileAt(map, nx, ny);
+    if (t !== "1") {
+      player.x = nx;
+      player.y = ny;
+      updateInfoPanel();
+    }
+  }
+
+  draw();
+  requestAnimationFrame(update);
+}
+
+/* ====== INFO PANEL / CONTEXT ====== */
+function setInfo(title, text, actionsHTML = "") {
+  document.getElementById("info-title").textContent = title;
+  document.getElementById("info-text").textContent = text;
+  document.getElementById("info-actions").innerHTML = actionsHTML;
+}
+
+function updateInfoPanel() {
+  if (world === "overworld") {
+    // near house door?
+    if (player.x === 5 && player.y === 5) {
+      setInfo("🏠 House Door", "Press E to enter your house.");
+    } else if (player.x === 12 && player.y === 9) {
+      setInfo("🛍️ Mall Entrance", "Press E to enter the mall.");
+    } else {
+      setInfo("🌆 Outside", "Walk between your house and the mall. Go to doors and press E to enter.");
+    }
+  } else if (world === "mall") {
+    const t = tileAt(mallMap, player.x, player.y);
+    if (t === "F") {
+      setInfo("👗 Fashion Area", "Press E to browse fashion items.");
+    } else if (t === "B") {
+      setInfo("🧴 Beauty & Home", "Press E to browse beauty and home items.");
+    } else if (t === "T") {
+      setInfo("🎬 Leisure & Travel", "Press E to browse leisure items or book vacations.");
+    } else if (t === "J") {
+      setInfo("💼 Job Desk", "Press E to see job options and do interviews.");
+    } else if (player.x === 10 && player.y === 12) {
+      setInfo("🚪 Exit", "Press E to leave the mall.");
+    } else {
+      setInfo("🛍️ Inside Mall", "Walk to coloured areas and press E to interact.");
+    }
+  } else if (world === "house") {
+    if (player.x === 10 && player.y === 10) {
+      setInfo("🚪 Door", "Press E to leave your house.");
+    } else if (player.x === 5 && player.y === 3) {
+      setInfo("🪑 Furniture Spot", "Press E to place an item from your inventory here.");
+    } else {
+      setInfo("🏠 Inside House", "Walk around. Find furniture spots and press E to place items.");
     }
   }
 }
 
-/* ---------- MOVEMENT & CONTEXT ---------- */
-function movePlayer(x, y) {
-  playerPos = { x, y };
-  renderWorld();
-  updateContext();
-}
-
-function updateContext() {
-  const code = worldMap[playerPos.y][playerPos.x];
-  const titleEl = document.getElementById("context-title");
-  const textEl = document.getElementById("context-text");
-  const actionsEl = document.getElementById("context-actions");
-  actionsEl.innerHTML = "";
-
-  if (code === "H") {
-    titleEl.textContent = "🏠 Your House";
-    textEl.textContent = "You can relax here, place furniture and feel how your life is improving.";
-    actionsEl.innerHTML = `
-      <button class="secondary" onclick="restAtHome()">Rest (+happiness)</button>
-      <button class="ghost" onclick="openHouseOptions()">View House Upgrades</button>
-    `;
-  } else if (code === "M") {
-    titleEl.textContent = "🛍️ Mall Entrance";
-    textEl.textContent = "From here you can walk to different parts of the mall.";
-    actionsEl.innerHTML = `
-      <button class="secondary" onclick="moveToCode('F')">Go to Fashion</button>
-      <button class="secondary" onclick="moveToCode('B')">Go to Beauty & Home</button>
-      <button class="secondary" onclick="moveToCode('C')">Go to Leisure</button>
-      <button class="ghost" onclick="moveToCode('J')">Go to Job Centre</button>
-    `;
-  } else if (code === "F" || code === "B" || code === "C" || code === "M") {
-    const shop = shops[code];
-    titleEl.textContent = `🛒 ${shop.name}`;
-    textEl.textContent = "Browse items you’d find in real shops and take them home.";
-    shop.items.forEach((item, idx) => {
-      const div = document.createElement("div");
-      div.className = "shop-card";
-      div.innerHTML = `
-        <strong>${item.name}</strong><br>
-        Price: £${item.price} · Happiness: +${item.happiness}<br>
-        <button class="primary" onclick="buyShopItem('${code}', ${idx})">Buy</button>
-      `;
-      actionsEl.appendChild(div);
-    });
-  } else if (code === "J") {
-    titleEl.textContent = "💼 Mall Job Centre";
-    textEl.textContent = "Apply for jobs. Better houses and items unlock better job options.";
-    renderJobOptions(actionsEl);
-  } else if (code === "V") {
-    titleEl.textContent = "✈️ Vacations Desk";
-    textEl.textContent = "Plan trips with Economy, Business or First Class travel.";
-    renderVacationOptions(actionsEl);
-  } else {
-    titleEl.textContent = "🚶 Road";
-    textEl.textContent = "You’re walking between places.";
-    actionsEl.innerHTML = `<button class="secondary" onclick="moveToCode('M')">Head to the Mall Entrance</button>`;
-  }
-}
-
-function moveToCode(targetCode) {
-  // simple: find first tile with that code and move there
-  for (let y = 0; y < worldHeight; y++) {
-    for (let x = 0; x < worldWidth; x++) {
-      if (worldMap[y][x] === targetCode) {
-        movePlayer(x, y);
-        return;
-      }
+/* ====== INTERACTION ====== */
+function interact() {
+  if (world === "overworld") {
+    if (player.x === 5 && player.y === 5) {
+      // enter house
+      world = "house";
+      player.x = 10;
+      player.y = 9;
+      updateInfoPanel();
+      return;
+    }
+    if (player.x === 12 && player.y === 9) {
+      // enter mall
+      world = "mall";
+      player.x = 10;
+      player.y = 10;
+      updateInfoPanel();
+      return;
+    }
+  } else if (world === "mall") {
+    const t = tileAt(mallMap, player.x, player.y);
+    if (t === "F") {
+      openShop("fashion");
+      return;
+    }
+    if (t === "B") {
+      openShop("beauty");
+      return;
+    }
+    if (t === "T") {
+      openLeisureOrTravel();
+      return;
+    }
+    if (t === "J") {
+      openJobCentre();
+      return;
+    }
+    if (player.x === 10 && player.y === 12) {
+      world = "overworld";
+      player.x = 12;
+      player.y = 10;
+      updateInfoPanel();
+      return;
+    }
+  } else if (world === "house") {
+    if (player.x === 10 && player.y === 10) {
+      world = "overworld";
+      player.x = 5;
+      player.y = 6;
+      updateInfoPanel();
+      return;
+    }
+    if (player.x === 5 && player.y === 3) {
+      placeFurnitureSpot();
+      return;
     }
   }
 }
 
-/* ---------- HOME / REST / HOUSES ---------- */
-function restAtHome() {
-  happiness += 5;
-  if (happiness > 100) happiness = 100;
-  day += 1;
-  alert("You rested at home and feel a bit better.");
-  updateStats();
-}
+/* ====== SHOPS ====== */
+function openShop(type) {
+  const items = shopItems[type];
+  let title = "";
+  if (type === "fashion") title = "👗 Fashion Shop";
+  if (type === "beauty") title = "🧴 Beauty & Home Shop";
+  if (type === "leisure") title = "🎬 Leisure Shop";
 
-function openHouseOptions() {
-  moveToCode("H");
-  const actionsEl = document.getElementById("context-actions");
-  actionsEl.innerHTML = "";
-  const titleEl = document.getElementById("context-title");
-  const textEl = document.getElementById("context-text");
-  titleEl.textContent = "🏠 House Upgrades";
-  textEl.textContent = "Move into better homes as you earn more. Better homes unlock better jobs and vacations.";
-
-  houses.forEach(h => {
-    const div = document.createElement("div");
-    div.className = "house-card";
-    const current = h.name === house.name;
-    div.innerHTML = `
-      <strong>${h.name}</strong> (Tier ${h.tier})<br>
-      ${h.description}<br>
-      Move-in cost: £${h.cost}<br>
-      <button class="${current ? 'secondary' : 'primary'}" ${current ? 'disabled' : ''} onclick="buyHouse('${h.name}', ${h.cost}, ${h.tier})">
-        ${current ? 'Current Home' : 'Move Here'}
-      </button>
-    `;
-    actionsEl.appendChild(div);
+  let html = "";
+  items.forEach((item, i) => {
+    html += `<button class="primary" onclick="buyItem('${type}', ${i})">${item.name} – £${item.price}, +${item.happiness} happiness</button>`;
   });
+  setInfo(title, "Press a button below to buy items. They go into your inventory.", html);
 }
 
-function buyHouse(name, cost, tier) {
-  if (name === house.name) return;
-  if (money < cost) {
-    alert("You can’t afford that house yet.");
-    return;
-  }
-  money -= cost;
-  house = { name, tier };
-  alert(`You moved into ${name}. New tier: ${tier}. Better jobs and vacations will unlock.`);
-  updateStats();
-  openHouseOptions();
-}
-
-/* ---------- SHOP BUYING ---------- */
-function buyShopItem(code, index) {
-  const shop = shops[code];
-  const item = shop.items[index];
+function buyItem(type, index) {
+  const items = shopItems[type];
+  const item = items[index];
   if (money < item.price) {
     alert("You can’t afford that yet.");
     return;
@@ -574,28 +603,49 @@ function buyShopItem(code, index) {
   inventory.push(item);
   alert(`You bought ${item.name}. It’s now in your inventory.`);
   updateStats();
-  renderInventory();
 }
 
-/* ---------- JOBS & INTERVIEWS ---------- */
-function renderJobOptions(container) {
-  const tier = house.tier;
-  jobs.forEach(j => {
-    if (j.tierRequired <= tier) {
-      const div = document.createElement("div");
-      div.className = "job-card";
-      div.innerHTML = `
-        <strong>${j.name}</strong> (Tier ${j.tierRequired}+)<br>
-        Salary: £${j.salary} per work day<br>
-        ${j.description}<br>
-        <button class="primary" onclick="startInterview('${j.id}')">Apply / Interview</button>
-      `;
-      container.appendChild(div);
+/* Leisure area: items + vacations */
+function openLeisureOrTravel() {
+  let html = "";
+  // leisure items
+  shopItems.leisure.forEach((item, i) => {
+    html += `<button class="primary" onclick="buyItem('leisure', ${i})">${item.name} – £${item.price}, +${item.happiness} happiness</button>`;
+  });
+  // vacations
+  html += `<p style="margin-top:6px;">Vacations (unlocked by house tier):</p>`;
+  vacations.forEach((v, i) => {
+    if (v.tierRequired <= house.tier) {
+      html += `<button class="secondary" onclick="openTravelClass('${v.name}', ${v.baseCost}, ${v.baseHappy})">${v.name} – base £${v.baseCost}, +${v.baseHappy} happiness</button>`;
     }
   });
+  setInfo("🎬 Leisure & Travel", "Buy fun things or book a trip.", html);
 }
 
-let currentInterviewJob = null;
+/* ====== JOBS ====== */
+function openJobCentre() {
+  let html = "";
+  jobs.forEach(j => {
+    if (j.tierRequired <= house.tier) {
+      html += `<button class="primary" onclick="startInterview('${j.id}')">${j.name} – £${j.salary} per work day (Tier ${j.tierRequired}+)</button>`;
+    }
+  });
+  html += `<button class="secondary" onclick="goWork()">Go to Work (if you have a job)</button>`;
+  setInfo("💼 Job Desk", "Apply for jobs or go to work.", html);
+}
+
+function goWork() {
+  if (!job) {
+    alert("You don’t have a job yet. Do an interview first.");
+    return;
+  }
+  money += job.salary;
+  happiness -= 2;
+  if (happiness < 0) happiness = 0;
+  day += 1;
+  alert(`You worked as ${job.name} and earned £${job.salary}.`);
+  updateStats();
+}
 
 function startInterview(id) {
   const j = jobs.find(x => x.id === id);
@@ -631,25 +681,7 @@ function closeInterview() {
   document.getElementById("interview-modal").classList.add("hidden");
 }
 
-/* ---------- VACATIONS & TRAVEL CLASS ---------- */
-function renderVacationOptions(container) {
-  const tier = house.tier;
-  vacations.forEach(v => {
-    if (v.tierRequired <= tier) {
-      const div = document.createElement("div");
-      div.className = "vacation-card";
-      div.innerHTML = `
-        <strong>${v.name}</strong> (Tier ${v.tierRequired}+)<br>
-        Base cost: £${v.baseCost} · Base happiness: +${v.baseHappy}<br>
-        <button class="primary" onclick="openTravelClass('${v.name}', ${v.baseCost}, ${v.baseHappy})">
-          Book Trip
-        </button>
-      `;
-      container.appendChild(div);
-    }
-  });
-}
-
+/* ====== TRAVEL CLASSES ====== */
 function openTravelClass(name, baseCost, baseHappy) {
   pendingVacation = { name, baseCost, baseHappy };
   document.getElementById("travel-title").textContent = `Travel to ${name}`;
@@ -687,25 +719,59 @@ function closeTravel() {
   document.getElementById("travel-modal").classList.add("hidden");
 }
 
-/* ---------- NAV SHORTCUTS ---------- */
+/* ====== HOUSE FURNITURE ====== */
+function placeFurnitureSpot() {
+  if (inventory.length === 0) {
+    alert("You have no items in your inventory to place.");
+    return;
+  }
+  const item = inventory.shift();
+  houseItems.push(item);
+  alert(`You placed ${item.name} in your house.`);
+}
+
+/* ====== NAV SHORTCUTS ====== */
 function focusHome() {
-  moveToCode("H");
+  world = "overworld";
+  player.x = 5;
+  player.y = 10;
+  updateInfoPanel();
 }
 function focusMall() {
-  moveToCode("M");
+  world = "overworld";
+  player.x = 12;
+  player.y = 10;
+  updateInfoPanel();
 }
 function focusJobs() {
-  moveToCode("J");
+  world = "mall";
+  player.x = 10;
+  player.y = 10;
+  updateInfoPanel();
 }
 function focusProfile() {
   alert(`Day ${day}\nMoney: £${money}\nHappiness: ${happiness}\nHouse: ${house.name}\nJob: ${job ? job.name : "Unemployed"}`);
 }
 
-/* ---------- INIT ---------- */
-renderWorld();
+/* ====== STATS UPDATE ====== */
+function updateStats() {
+  const moneyEl = document.getElementById("money");
+  moneyEl.textContent = money;
+  moneyEl.classList.remove("pulse");
+  void moneyEl.offsetWidth;
+  moneyEl.classList.add("pulse");
+
+  document.getElementById("happiness").textContent = happiness;
+  document.getElementById("house").textContent = house.name;
+  document.getElementById("job").textContent = job ? job.name : "Unemployed";
+}
+
+/* ====== START GAME ====== */
 updateStats();
-renderInventory();
-updateContext();
+updateInfoPanel();
+draw();
+requestAnimationFrame(update);
 </script>
+
 </body>
 </html>
