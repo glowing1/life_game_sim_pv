@@ -1,91 +1,723 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <title>Westgate Life Mall Game</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<title>Westgate Life Mall Game</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: #f3f4f6;
+    color: #111827;
+}
+
+/* Header / top bar */
+
+header {
+    background: linear-gradient(135deg, #111827, #1f2937);
+    color: white;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+header .title-block {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+#avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 999px;
+    background: radial-gradient(circle at 30% 30%, #fbbf24, #f97316);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #111827;
+    font-weight: 700;
+    box-shadow: 0 0 0 2px rgba(255,255,255,0.4);
+}
+
+header h1 {
+    margin: 0;
+    font-size: 20px;
+}
+
+header p {
+    margin: 2px 0 0;
+    font-size: 12px;
+    color: #d1d5db;
+}
+
+/* Stats bar */
+
+#stats {
+    background: #111827;
+    color: #e5e7eb;
+    padding: 8px 10px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    font-size: 12px;
+}
+
+.stat {
+    margin: 4px 6px;
+}
+
+/* Main layout */
+
+main {
+    padding: 14px;
+    padding-bottom: 80px; /* space for nav */
+}
+
+.screen {
+    display: none;
+    animation: fadeIn 0.25s ease-out;
+}
+
+.screen.active {
+    display: block;
+}
+
+h2 {
+    margin-top: 0;
+    font-size: 18px;
+}
+
+/* Cards */
+
+.card {
+    background: white;
+    border-radius: 12px;
+    padding: 12px;
+    margin: 8px 0;
+    box-shadow: 0 1px 3px rgba(15,23,42,0.12);
+}
+
+.card h3 {
+    margin: 0 0 4px;
+    font-size: 15px;
+}
+
+.card p {
+    margin: 2px 0;
+    font-size: 13px;
+}
+
+/* Buttons */
+
+button {
+    padding: 9px 13px;
+    margin: 4px 4px 4px 0;
+    border-radius: 999px;
+    border: none;
+    cursor: pointer;
+    font-size: 13px;
+    transition: transform 0.08s ease, box-shadow 0.08s ease, background 0.15s;
+}
+
+button.primary {
+    background: #2563eb;
+    color: white;
+    box-shadow: 0 1px 3px rgba(37,99,235,0.4);
+}
+
+button.secondary {
+    background: #e5e7eb;
+    color: #111827;
+}
+
+button.ghost {
+    background: transparent;
+    border: 1px solid #d1d5db;
+}
+
+button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 5px rgba(15,23,42,0.18);
+}
+
+/* Mall floor buttons */
+
+.floor-buttons {
+    margin-bottom: 8px;
+}
+
+.floor-buttons button {
+    background: #111827;
+    color: #e5e7eb;
+    font-size: 12px;
+}
+
+/* Mall map */
+
+#mall-map {
+    margin: 10px 0 4px;
+    font-size: 12px;
+    color: #6b7280;
+}
+
+#mall-map span {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 999px;
+    margin-right: 4px;
+    border: 1px solid #d1d5db;
+}
+
+#mall-map .active-floor {
+    background: #111827;
+    color: #f9fafb;
+    border-color: #111827;
+}
+
+/* Nav bar */
+
+nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #111827;
+    display: flex;
+    justify-content: space-around;
+    padding: 8px 0 10px;
+    border-top: 1px solid #1f2937;
+}
+
+nav button {
+    background: transparent;
+    color: #e5e7eb;
+    font-size: 22px;
+    box-shadow: none;
+}
+
+/* Modal */
+
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(15,23,42,0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 20;
+}
+
+.modal.hidden {
+    display: none;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 16px;
+    padding: 16px;
+    width: 92%;
+    max-width: 420px;
+    box-shadow: 0 10px 25px rgba(15,23,42,0.35);
+}
+
+#interview-choices button {
+    display: block;
+    width: 100%;
+    text-align: left;
+    margin: 6px 0;
+}
+
+/* Animations */
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulseMoney {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.08); }
+    100% { transform: scale(1); }
+}
+
+.pulse {
+    animation: pulseMoney 0.25s ease-out;
+}
+</style>
 </head>
+
 <body>
 
-    <header>
-        <h1>Westgate Life</h1>
-        <p>Work, shop, upgrade your life in a mall-style world.</p>
-    </header>
-
-    <section id="stats">
-        <div class="stat">💷 Money: <span id="money">50</span></div>
-        <div class="stat">😊 Happiness: <span id="happiness">50</span></div>
-        <div class="stat">🏠 House: <span id="house">Tiny Studio</span></div>
-        <div class="stat">💼 Job: <span id="job">Unemployed</span></div>
-    </section>
-
-    <main>
-        <section id="screen-home" class="screen active">
-            <h2>🏠 Home</h2>
-            <p>Welcome to your life. Use the buttons below to work, visit the mall, or improve your lifestyle.</p>
-            <button class="primary" onclick="goWork()">Go to Work</button>
-            <button onclick="openMall()">Go to Mall</button>
-            <button onclick="openHouses()">View Houses</button>
-            <button onclick="openVacations()">Plan Vacation</button>
-        </section>
-
-        <section id="screen-mall" class="screen">
-            <h2>🛍️ Shopping Mall</h2>
-            <div class="floor-buttons">
-                <button onclick="showFloor('ground')">Ground Floor</button>
-                <button onclick="showFloor('middle')">Middle Floor</button>
-                <button onclick="showFloor('top')">Top Floor</button>
-                <button onclick="openJobCentre()">Job Centre</button>
-            </div>
-            <div id="shops"></div>
-        </section>
-
-        <section id="screen-jobs" class="screen">
-            <h2>💼 Job Centre (Mall)</h2>
-            <p>Apply for jobs in the mall. Pass the interview to get hired.</p>
-            <div id="job-list"></div>
-        </section>
-
-        <section id="screen-houses" class="screen">
-            <h2>🏠 Houses</h2>
-            <p>Upgrade your home to improve your lifestyle.</p>
-            <div id="house-list"></div>
-        </section>
-
-        <section id="screen-vacations" class="screen">
-            <h2>✈️ Vacations</h2>
-            <p>Take a break and boost your happiness.</p>
-            <div id="vacation-list"></div>
-        </section>
-
-        <section id="screen-profile" class="screen">
-            <h2>👤 Profile</h2>
-            <p>Track your progress.</p>
-            <ul>
-                <li>Money: <span id="profile-money">50</span></li>
-                <li>Happiness: <span id="profile-happiness">50</span></li>
-                <li>House: <span id="profile-house">Tiny Studio</span></li>
-                <li>Job: <span id="profile-job">Unemployed</span></li>
-            </ul>
-        </section>
-    </main>
-
-    <div id="interview-modal" class="modal hidden">
-        <div class="modal-content">
-            <h3 id="interview-job-title">Job Interview</h3>
-            <p id="interview-question">Why should we hire you?</p>
-            <div id="interview-choices"></div>
-            <button class="secondary" onclick="closeInterview()">Close</button>
+<header>
+    <div class="title-block">
+        <div id="avatar">U</div>
+        <div>
+            <h1>Westgate Life</h1>
+            <p>Live, work and shop inside a modern mall.</p>
         </div>
     </div>
+</header>
 
-    <nav>
-        <button onclick="switchScreen('home')">🏠</button>
-        <button onclick="switchScreen('mall')">🛍️</button>
-        <button onclick="switchScreen('jobs')">💼</button>
-        <button onclick="switchScreen('profile')">👤</button>
-    </nav>
+<section id="stats">
+    <div class="stat">💷 Money: <span id="money">50</span></div>
+    <div class="stat">😊 Happiness: <span id="happiness">50</span></div>
+    <div class="stat">🏠 House: <span id="house">Tiny Studio</span></div>
+    <div class="stat">💼 Job: <span id="job">Unemployed</span></div>
+</section>
 
-    <script src="game.js"></script>
+<main>
+
+<!-- HOME -->
+
+<section id="screen-home" class="screen active">
+    <h2>🏠 Home</h2>
+    <div class="card">
+        <p>Welcome to your life at Westgate. Earn money, get jobs in the mall, upgrade your home and take breaks when you need them.</p>
+        <button class="primary" onclick="goWork()">Go to Work</button>
+        <button class="secondary" onclick="openMall()">Go to Mall</button>
+        <button class="secondary" onclick="openHouses()">View Houses</button>
+        <button class="secondary" onclick="openVacations()">Plan Vacation</button>
+    </div>
+    <div class="card">
+        <h3>Your Day</h3>
+        <p id="day-text">Day 1 · Just getting started.</p>
+    </div>
+</section>
+
+<!-- MALL -->
+
+<section id="screen-mall" class="screen">
+    <h2>🛍️ Westgate Mall</h2>
+    <div id="mall-map">
+        <span id="map-ground" class="active-floor">Ground · Essentials</span>
+        <span id="map-middle">Middle · Fashion</span>
+        <span id="map-top">Top · Leisure</span>
+    </div>
+    <div class="floor-buttons">
+        <button onclick="showFloor('ground')">Ground Floor</button>
+        <button onclick="showFloor('middle')">Middle Floor</button>
+        <button onclick="showFloor('top')">Top Floor</button>
+        <button class="ghost" onclick="openJobCentre()">Job Centre</button>
+    </div>
+    <div id="shops"></div>
+</section>
+
+<!-- JOB CENTRE -->
+
+<section id="screen-jobs" class="screen">
+    <h2>💼 Mall Job Centre</h2>
+    <div class="card">
+        <p>Apply for jobs inside the mall. Answer interview questions to see if you get hired.</p>
+    </div>
+    <div id="job-list"></div>
+</section>
+
+<!-- HOUSES -->
+
+<section id="screen-houses" class="screen">
+    <h2>🏠 Houses</h2>
+    <div class="card">
+        <p>Move into better homes as you earn more. Nicer homes feel better to live in.</p>
+    </div>
+    <div id="house-list"></div>
+</section>
+
+<!-- VACATIONS -->
+
+<section id="screen-vacations" class="screen">
+    <h2>✈️ Vacations</h2>
+    <div class="card">
+        <p>Take a break from work and boost your happiness. Just make sure you can afford it.</p>
+    </div>
+    <div id="vacation-list"></div>
+</section>
+
+<!-- PROFILE -->
+
+<section id="screen-profile" class="screen">
+    <h2>👤 Profile</h2>
+    <div class="card">
+        <h3>Overview</h3>
+        <p>Money: <span id="profile-money">50</span></p>
+        <p>Happiness: <span id="profile-happiness">50</span></p>
+        <p>House: <span id="profile-house">Tiny Studio</span></p>
+        <p>Job: <span id="profile-job">Unemployed</span></p>
+    </div>
+    <div class="card">
+        <h3>Avatar</h3>
+        <p>Your avatar initial is based on your name. (Right now it’s just “U” for “User”.)</p>
+    </div>
+</section>
+
+</main>
+
+<!-- INTERVIEW MODAL -->
+
+<div id="interview-modal" class="modal hidden">
+    <div class="modal-content">
+        <h3 id="interview-job-title">Job Interview</h3>
+        <p id="interview-question">Question goes here</p>
+        <div id="interview-choices"></div>
+        <button class="secondary" onclick="closeInterview()">Close</button>
+    </div>
+</div>
+
+<!-- NAVIGATION -->
+
+<nav>
+    <button onclick="switchScreen('home')">🏠</button>
+    <button onclick="switchScreen('mall')">🛍️</button>
+    <button onclick="switchScreen('jobs')">💼</button>
+    <button onclick="switchScreen('profile')">👤</button>
+</nav>
+
+<script>
+/* ---------- STATE ---------- */
+
+let day = 1;
+let money = 50;
+let happiness = 50;
+let house = { name: "Tiny Studio", rent: 50 };
+let job = null;
+
+/* ---------- DATA ---------- */
+
+const floors = {
+    ground: [
+        { name: "Superdrug Essentials", price: 18, happiness: 2 },
+        { name: "Primark Outfit", price: 30, happiness: 3 },
+        { name: "Boots Skincare Set", price: 42, happiness: 4 }
+    ],
+    middle: [
+        { name: "Zara Outfit", price: 90, happiness: 5 },
+        { name: "River Island Jacket", price: 110, happiness: 6 },
+        { name: "Shoe Store Trainers", price: 75, happiness: 4 }
+    ],
+    top: [
+        { name: "Cinema Ticket", price: 15, happiness: 5 },
+        { name: "Café Latte & Cake", price: 9, happiness: 3 },
+        { name: "Arcade Tokens", price: 12, happiness: 4 }
+    ]
+};
+
+const jobs = [
+    {
+        id: "fast_food",
+        name: "Food Court Crew",
+        salary: 40,
+        location: "Top Floor · Food Court",
+        description: "Take orders, serve food and keep the area tidy.",
+        interview: {
+            question: "A customer is upset about a wrong order. What do you do?",
+            choices: [
+                { text: "Listen, apologise and fix the order quickly.", success: true },
+                { text: "Tell them it's not your problem.", success: false },
+                { text: "Ignore them and keep working.", success: false }
+            ]
+        }
+    },
+    {
+        id: "fashion",
+        name: "Fashion Store Assistant",
+        salary: 55,
+        location: "Middle Floor · Fashion Wing",
+        description: "Help customers find outfits and keep the store looking good.",
+        interview: {
+            question: "A customer can’t decide between two outfits. What do you do?",
+            choices: [
+                { text: "Ask questions about their style and suggest what suits them.", success: true },
+                { text: "Tell them to hurry up and choose.", success: false },
+                { text: "Walk away and tidy something else.", success: false }
+            ]
+        }
+    },
+    {
+        id: "cafe",
+        name: "Café Barista",
+        salary: 50,
+        location: "Top Floor · Café",
+        description: "Make drinks and chat with customers.",
+        interview: {
+            question: "What makes great customer service in a café?",
+            choices: [
+                { text: "Being friendly, accurate and remembering regulars.", success: true },
+                { text: "Only serving people you like.", success: false },
+                { text: "Doing the bare minimum.", success: false }
+            ]
+        }
+    },
+    {
+        id: "cinema",
+        name: "Cinema Staff",
+        salary: 48,
+        location: "Top Floor · Cinema",
+        description: "Sell tickets and snacks, check tickets at the door.",
+        interview: {
+            question: "There’s a long queue before a big film. What do you do?",
+            choices: [
+                { text: "Stay calm, work quickly and keep people informed.", success: true },
+                { text: "Complain loudly about how busy it is.", success: false },
+                { text: "Hide in the back until it’s quieter.", success: false }
+            ]
+        }
+    }
+];
+
+const houses = [
+    { name: "Tiny Studio", cost: 0, description: "Small but affordable." },
+    { name: "Small Apartment", cost: 300, description: "A bit more space and comfort." },
+    { name: "Townhouse", cost: 900, description: "Plenty of room and nicer area." },
+    { name: "City View Apartment", cost: 1500, description: "Modern flat with a great view." }
+];
+
+const vacations = [
+    { name: "Brighton Weekend", cost: 150, happiness: 10, description: "Sea, chips and arcades." },
+    { name: "Paris City Break", cost: 450, happiness: 20, description: "Cafés, museums and shopping." },
+    { name: "Island Getaway", cost: 1200, happiness: 35, description: "Sun, beaches and total chill." }
+];
+
+/* ---------- UI HELPERS ---------- */
+
+function updateStats() {
+    const moneyEl = document.getElementById("money");
+    moneyEl.textContent = money;
+    moneyEl.classList.remove("pulse");
+    void moneyEl.offsetWidth;
+    moneyEl.classList.add("pulse");
+
+    document.getElementById("happiness").textContent = happiness;
+    document.getElementById("house").textContent = house.name;
+    document.getElementById("job").textContent = job ? job.name : "Unemployed";
+
+    document.getElementById("profile-money").textContent = money;
+    document.getElementById("profile-happiness").textContent = happiness;
+    document.getElementById("profile-house").textContent = house.name;
+    document.getElementById("profile-job").textContent = job ? job.name : "Unemployed";
+
+    document.getElementById("day-text").textContent = `Day ${day} · Life in the mall continues.`;
+}
+
+function switchScreen(name) {
+    document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+    document.getElementById(`screen-${name}`).classList.add("active");
+}
+
+/* ---------- NAV SHORTCUTS ---------- */
+
+function openMall() {
+    switchScreen("mall");
+    showFloor("ground");
+}
+
+function openJobCentre() {
+    switchScreen("jobs");
+    renderJobs();
+}
+
+function openHouses() {
+    switchScreen("houses");
+    renderHouses();
+}
+
+function openVacations() {
+    switchScreen("vacations");
+    renderVacations();
+}
+
+/* ---------- WORK ---------- */
+
+function goWork() {
+    if (!job) {
+        alert("You don’t have a job yet. Go to the Mall Job Centre to apply.");
+        openJobCentre();
+        return;
+    }
+    money += job.salary;
+    happiness -= 2;
+    if (happiness < 0) happiness = 0;
+    day += 1;
+    alert(`You worked as ${job.name} and earned £${job.salary}.`);
+    updateStats();
+}
+
+/* ---------- MALL / SHOPS ---------- */
+
+function setActiveFloorOnMap(floor) {
+    document.getElementById("map-ground").classList.remove("active-floor");
+    document.getElementById("map-middle").classList.remove("active-floor");
+    document.getElementById("map-top").classList.remove("active-floor");
+    if (floor === "ground") document.getElementById("map-ground").classList.add("active-floor");
+    if (floor === "middle") document.getElementById("map-middle").classList.add("active-floor");
+    if (floor === "top") document.getElementById("map-top").classList.add("active-floor");
+}
+
+function showFloor(floor) {
+    setActiveFloorOnMap(floor);
+    const area = document.getElementById("shops");
+    area.innerHTML = "";
+    floors[floor].forEach(item => {
+        const div = document.createElement("div");
+        div.className = "card";
+        div.innerHTML = `
+            <h3>${item.name}</h3>
+            <p>Price: £${item.price}</p>
+            <p>Happiness: +${item.happiness}</p>
+            <button class="primary" onclick="buyItem(${item.price}, ${item.happiness}, '${item.name.replace(/'/g, "\\'")}')">Buy</button>
+        `;
+        area.appendChild(div);
+    });
+}
+
+function buyItem(price, happy, name) {
+    if (money < price) {
+        alert("You can’t afford that right now.");
+        return;
+    }
+    money -= price;
+    happiness += happy;
+    if (happiness > 100) happiness = 100;
+    alert(`You bought ${name}.`);
+    updateStats();
+}
+
+/* ---------- JOB CENTRE / INTERVIEWS ---------- */
+
+function renderJobs() {
+    const list = document.getElementById("job-list");
+    list.innerHTML = "";
+    jobs.forEach(j => {
+        const div = document.createElement("div");
+        div.className = "card";
+        div.innerHTML = `
+            <h3>${j.name}</h3>
+            <p>${j.location}</p>
+            <p>Salary: £${j.salary} per work day</p>
+            <p>${j.description}</p>
+            <button class="primary" onclick="startInterview('${j.id}')">Apply / Interview</button>
+        `;
+        list.appendChild(div);
+    });
+}
+
+let currentInterviewJob = null;
+
+function startInterview(id) {
+    const j = jobs.find(x => x.id === id);
+    if (!j) return;
+    currentInterviewJob = j;
+
+    document.getElementById("interview-job-title").textContent = `Interview: ${j.name}`;
+    document.getElementById("interview-question").textContent = j.interview.question;
+
+    const choicesDiv = document.getElementById("interview-choices");
+    choicesDiv.innerHTML = "";
+    j.interview.choices.forEach((choice, index) => {
+        const btn = document.createElement("button");
+        btn.className = "secondary";
+        btn.textContent = choice.text;
+        btn.onclick = () => finishInterview(index);
+        choicesDiv.appendChild(btn);
+    });
+
+    document.getElementById("interview-modal").classList.remove("hidden");
+}
+
+function finishInterview(index) {
+    if (!currentInterviewJob) return;
+    const choice = currentInterviewJob.interview.choices[index];
+    if (choice.success) {
+        job = currentInterviewJob;
+        alert(`You passed the interview! You are now ${job.name}.`);
+    } else {
+        alert("You didn’t get the job this time.");
+    }
+    currentInterviewJob = null;
+    closeInterview();
+    updateStats();
+}
+
+function closeInterview() {
+    document.getElementById("interview-modal").classList.add("hidden");
+}
+
+/* ---------- HOUSES ---------- */
+
+function renderHouses() {
+    const list = document.getElementById("house-list");
+    list.innerHTML = "";
+    houses.forEach(h => {
+        const isCurrent = h.name === house.name;
+        const div = document.createElement("div");
+        div.className = "card";
+        div.innerHTML = `
+            <h3>${h.name}</h3>
+            <p>${h.description}</p>
+            <p>Move-in cost: £${h.cost}</p>
+            <button class="${isCurrent ? 'secondary' : 'primary'}" ${isCurrent ? 'disabled' : ''} onclick="buyHouse('${h.name.replace(/'/g, "\\'")}', ${h.cost})">
+                ${isCurrent ? 'Current Home' : 'Move Here'}
+            </button>
+        `;
+        list.appendChild(div);
+    });
+}
+
+function buyHouse(name, cost) {
+    if (name === house.name) return;
+    if (money < cost) {
+        alert("You can’t afford to move there yet.");
+        return;
+    }
+    money -= cost;
+    house = { name, rent: 0 };
+    alert(`You moved into ${name}.`);
+    updateStats();
+    renderHouses();
+}
+
+/* ---------- VACATIONS ---------- */
+
+function renderVacations() {
+    const list = document.getElementById("vacation-list");
+    list.innerHTML = "";
+    vacations.forEach(v => {
+        const div = document.createElement("div");
+        div.className = "card";
+        div.innerHTML = `
+            <h3>${v.name}</h3>
+            <p>${v.description}</p>
+            <p>Cost: £${v.cost}</p>
+            <p>Happiness: +${v.happiness}</p>
+            <button class="primary" onclick="takeVacation(${v.cost}, ${v.happiness}, '${v.name.replace(/'/g, "\\'")}')">Go</button>
+        `;
+        list.appendChild(div);
+    });
+}
+
+function takeVacation(cost, happy, name) {
+    if (money < cost) {
+        alert("You can’t afford this vacation yet.");
+        return;
+    }
+    money -= cost;
+    happiness += happy;
+    if (happiness > 100) happiness = 100;
+    day += 1;
+    alert(`You went on a trip to ${name}. You feel refreshed.`);
+    updateStats();
+}
+
+/* ---------- INIT ---------- */
+
+updateStats();
+showFloor("ground");
+</script>
+
 </body>
 </html>
