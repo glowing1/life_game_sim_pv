@@ -2,722 +2,710 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Westgate Life Mall Game</title>
-
+<title>Westgate Life – Mall World</title>
 <style>
-* {
-    box-sizing: border-box;
-}
-
+* { box-sizing: border-box; }
 body {
-    margin: 0;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    background: #f3f4f6;
-    color: #111827;
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: #e5e7eb;
+  color: #111827;
 }
-
-/* Header / top bar */
-
 header {
-    background: linear-gradient(135deg, #111827, #1f2937);
-    color: white;
-    padding: 16px 20px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+  background: #111827;
+  color: #f9fafb;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
-
-header .title-block {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
+header h1 { margin: 0; font-size: 18px; }
+header p { margin: 2px 0 0; font-size: 12px; color: #9ca3af; }
 #avatar {
-    width: 40px;
-    height: 40px;
-    border-radius: 999px;
-    background: radial-gradient(circle at 30% 30%, #fbbf24, #f97316);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #111827;
-    font-weight: 700;
-    box-shadow: 0 0 0 2px rgba(255,255,255,0.4);
+  width: 40px; height: 40px; border-radius: 999px;
+  background: radial-gradient(circle at 30% 30%, #fbbf24, #f97316);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; color: #111827;
 }
-
-header h1 {
-    margin: 0;
-    font-size: 20px;
-}
-
-header p {
-    margin: 2px 0 0;
-    font-size: 12px;
-    color: #d1d5db;
-}
-
-/* Stats bar */
-
 #stats {
-    background: #111827;
-    color: #e5e7eb;
-    padding: 8px 10px;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
-    font-size: 12px;
+  background: #111827;
+  color: #e5e7eb;
+  padding: 6px 10px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  font-size: 12px;
 }
-
-.stat {
-    margin: 4px 6px;
-}
-
-/* Main layout */
-
+.stat { margin: 2px 4px; }
 main {
-    padding: 14px;
-    padding-bottom: 80px; /* space for nav */
+  padding: 10px;
+  padding-bottom: 80px;
 }
 
-.screen {
-    display: none;
-    animation: fadeIn 0.25s ease-out;
+/* WORLD MAP */
+#world {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 4px;
+  margin-bottom: 10px;
+}
+.tile {
+  position: relative;
+  background: #d1d5db;
+  border-radius: 6px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  text-align: center;
+  padding: 4px;
+}
+.tile.mall { background: #111827; color: #f9fafb; }
+.tile.house { background: #1d4ed8; color: #f9fafb; }
+.tile.job { background: #047857; color: #ecfdf5; }
+.tile.vacation { background: #7c3aed; color: #f5f3ff; }
+.tile.road { background: #9ca3af; color: #111827; }
+.tile .label { pointer-events: none; }
+.player {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  background: #f97316;
+  border: 2px solid #fef3c7;
 }
 
-.screen.active {
-    display: block;
+/* PANELS */
+.panel {
+  background: white;
+  border-radius: 10px;
+  padding: 10px;
+  margin-bottom: 8px;
+  box-shadow: 0 1px 3px rgba(15,23,42,0.15);
 }
-
-h2 {
-    margin-top: 0;
-    font-size: 18px;
-}
-
-/* Cards */
-
-.card {
-    background: white;
-    border-radius: 12px;
-    padding: 12px;
-    margin: 8px 0;
-    box-shadow: 0 1px 3px rgba(15,23,42,0.12);
-}
-
-.card h3 {
-    margin: 0 0 4px;
-    font-size: 15px;
-}
-
-.card p {
-    margin: 2px 0;
-    font-size: 13px;
-}
-
-/* Buttons */
+.panel h2 { margin: 0 0 6px; font-size: 16px; }
+.panel p { margin: 2px 0; font-size: 13px; }
 
 button {
-    padding: 9px 13px;
-    margin: 4px 4px 4px 0;
-    border-radius: 999px;
-    border: none;
-    cursor: pointer;
-    font-size: 13px;
-    transition: transform 0.08s ease, box-shadow 0.08s ease, background 0.15s;
+  padding: 7px 11px;
+  margin: 3px 3px 3px 0;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+}
+button.primary { background: #2563eb; color: white; }
+button.secondary { background: #e5e7eb; color: #111827; }
+button.ghost { background: transparent; border: 1px solid #d1d5db; }
+
+.shop-card, .job-card, .house-card, .vacation-card, .item-card {
+  background: #f9fafb;
+  border-radius: 8px;
+  padding: 8px;
+  margin: 6px 0;
+  font-size: 13px;
 }
 
-button.primary {
-    background: #2563eb;
-    color: white;
-    box-shadow: 0 1px 3px rgba(37,99,235,0.4);
-}
-
-button.secondary {
-    background: #e5e7eb;
-    color: #111827;
-}
-
-button.ghost {
-    background: transparent;
-    border: 1px solid #d1d5db;
-}
-
-button:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 2px 5px rgba(15,23,42,0.18);
-}
-
-/* Mall floor buttons */
-
-.floor-buttons {
-    margin-bottom: 8px;
-}
-
-.floor-buttons button {
-    background: #111827;
-    color: #e5e7eb;
-    font-size: 12px;
-}
-
-/* Mall map */
-
-#mall-map {
-    margin: 10px 0 4px;
-    font-size: 12px;
-    color: #6b7280;
-}
-
-#mall-map span {
-    display: inline-block;
-    padding: 4px 8px;
-    border-radius: 999px;
-    margin-right: 4px;
-    border: 1px solid #d1d5db;
-}
-
-#mall-map .active-floor {
-    background: #111827;
-    color: #f9fafb;
-    border-color: #111827;
-}
-
-/* Nav bar */
-
-nav {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: #111827;
-    display: flex;
-    justify-content: space-around;
-    padding: 8px 0 10px;
-    border-top: 1px solid #1f2937;
-}
-
-nav button {
-    background: transparent;
-    color: #e5e7eb;
-    font-size: 22px;
-    box-shadow: none;
-}
-
-/* Modal */
-
+/* MODALS */
 .modal {
-    position: fixed;
-    inset: 0;
-    background: rgba(15,23,42,0.55);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 20;
+  position: fixed;
+  inset: 0;
+  background: rgba(15,23,42,0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
 }
-
-.modal.hidden {
-    display: none;
-}
-
+.modal.hidden { display: none; }
 .modal-content {
-    background: white;
-    border-radius: 16px;
-    padding: 16px;
-    width: 92%;
-    max-width: 420px;
-    box-shadow: 0 10px 25px rgba(15,23,42,0.35);
+  background: white;
+  border-radius: 14px;
+  padding: 14px;
+  width: 92%;
+  max-width: 420px;
+  box-shadow: 0 10px 25px rgba(15,23,42,0.35);
+}
+.modal-content h3 { margin: 0 0 6px; font-size: 15px; }
+.modal-content p { margin: 3px 0; font-size: 13px; }
+.modal-content button { width: 100%; margin: 4px 0; text-align: left; }
+
+/* NAV */
+nav {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  background: #111827;
+  display: flex;
+  justify-content: space-around;
+  padding: 6px 0 8px;
+}
+nav button {
+  background: transparent;
+  color: #e5e7eb;
+  font-size: 20px;
+  border: none;
 }
 
-#interview-choices button {
-    display: block;
-    width: 100%;
-    text-align: left;
-    margin: 6px 0;
-}
-
-/* Animations */
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(4px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes pulseMoney {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.08); }
-    100% { transform: scale(1); }
-}
-
+/* SMALL ANIMATIONS */
 .pulse {
-    animation: pulseMoney 0.25s ease-out;
+  animation: pulse 0.25s ease-out;
+}
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+  100% { transform: scale(1); }
 }
 </style>
 </head>
-
 <body>
 
 <header>
-    <div class="title-block">
-        <div id="avatar">U</div>
-        <div>
-            <h1>Westgate Life</h1>
-            <p>Live, work and shop inside a modern mall.</p>
-        </div>
+  <div style="display:flex;align-items:center;gap:10px;">
+    <div id="avatar">U</div>
+    <div>
+      <h1>Westgate Life</h1>
+      <p>Walk the mall, work, shop, upgrade your world.</p>
     </div>
+  </div>
 </header>
 
 <section id="stats">
-    <div class="stat">💷 Money: <span id="money">50</span></div>
-    <div class="stat">😊 Happiness: <span id="happiness">50</span></div>
-    <div class="stat">🏠 House: <span id="house">Tiny Studio</span></div>
-    <div class="stat">💼 Job: <span id="job">Unemployed</span></div>
+  <div class="stat">💷 Money: <span id="money">50</span></div>
+  <div class="stat">😊 Happiness: <span id="happiness">50</span></div>
+  <div class="stat">🏠 House: <span id="house">Tiny Studio</span></div>
+  <div class="stat">💼 Job: <span id="job">Unemployed</span></div>
 </section>
 
 <main>
+  <!-- WORLD MAP -->
+  <div class="panel">
+    <h2>🗺️ Mall World</h2>
+    <p style="font-size:12px;">Tap tiles to move. Go to shops, your house, jobs and vacations.</p>
+    <div id="world"></div>
+  </div>
 
-<!-- HOME -->
+  <!-- CONTEXT PANEL -->
+  <div class="panel" id="context-panel">
+    <h2 id="context-title">🏠 Home Area</h2>
+    <p id="context-text" style="font-size:13px;">You’re near your tiny studio. Walk to the mall to shop or find a job.</p>
+    <div id="context-actions"></div>
+  </div>
 
-<section id="screen-home" class="screen active">
-    <h2>🏠 Home</h2>
-    <div class="card">
-        <p>Welcome to your life at Westgate. Earn money, get jobs in the mall, upgrade your home and take breaks when you need them.</p>
-        <button class="primary" onclick="goWork()">Go to Work</button>
-        <button class="secondary" onclick="openMall()">Go to Mall</button>
-        <button class="secondary" onclick="openHouses()">View Houses</button>
-        <button class="secondary" onclick="openVacations()">Plan Vacation</button>
-    </div>
-    <div class="card">
-        <h3>Your Day</h3>
-        <p id="day-text">Day 1 · Just getting started.</p>
-    </div>
-</section>
-
-<!-- MALL -->
-
-<section id="screen-mall" class="screen">
-    <h2>🛍️ Westgate Mall</h2>
-    <div id="mall-map">
-        <span id="map-ground" class="active-floor">Ground · Essentials</span>
-        <span id="map-middle">Middle · Fashion</span>
-        <span id="map-top">Top · Leisure</span>
-    </div>
-    <div class="floor-buttons">
-        <button onclick="showFloor('ground')">Ground Floor</button>
-        <button onclick="showFloor('middle')">Middle Floor</button>
-        <button onclick="showFloor('top')">Top Floor</button>
-        <button class="ghost" onclick="openJobCentre()">Job Centre</button>
-    </div>
-    <div id="shops"></div>
-</section>
-
-<!-- JOB CENTRE -->
-
-<section id="screen-jobs" class="screen">
-    <h2>💼 Mall Job Centre</h2>
-    <div class="card">
-        <p>Apply for jobs inside the mall. Answer interview questions to see if you get hired.</p>
-    </div>
-    <div id="job-list"></div>
-</section>
-
-<!-- HOUSES -->
-
-<section id="screen-houses" class="screen">
-    <h2>🏠 Houses</h2>
-    <div class="card">
-        <p>Move into better homes as you earn more. Nicer homes feel better to live in.</p>
-    </div>
-    <div id="house-list"></div>
-</section>
-
-<!-- VACATIONS -->
-
-<section id="screen-vacations" class="screen">
-    <h2>✈️ Vacations</h2>
-    <div class="card">
-        <p>Take a break from work and boost your happiness. Just make sure you can afford it.</p>
-    </div>
-    <div id="vacation-list"></div>
-</section>
-
-<!-- PROFILE -->
-
-<section id="screen-profile" class="screen">
-    <h2>👤 Profile</h2>
-    <div class="card">
-        <h3>Overview</h3>
-        <p>Money: <span id="profile-money">50</span></p>
-        <p>Happiness: <span id="profile-happiness">50</span></p>
-        <p>House: <span id="profile-house">Tiny Studio</span></p>
-        <p>Job: <span id="profile-job">Unemployed</span></p>
-    </div>
-    <div class="card">
-        <h3>Avatar</h3>
-        <p>Your avatar initial is based on your name. (Right now it’s just “U” for “User”.)</p>
-    </div>
-</section>
-
+  <!-- INVENTORY / HOUSE ITEMS -->
+  <div class="panel">
+    <h2>🎒 Inventory & House</h2>
+    <p style="font-size:13px;">Items you buy can be placed in your house to “try them out”.</p>
+    <div id="inventory-list"></div>
+    <div id="house-items-list"></div>
+  </div>
 </main>
 
 <!-- INTERVIEW MODAL -->
-
 <div id="interview-modal" class="modal hidden">
-    <div class="modal-content">
-        <h3 id="interview-job-title">Job Interview</h3>
-        <p id="interview-question">Question goes here</p>
-        <div id="interview-choices"></div>
-        <button class="secondary" onclick="closeInterview()">Close</button>
-    </div>
+  <div class="modal-content">
+    <h3 id="interview-job-title">Job Interview</h3>
+    <p id="interview-question">Question</p>
+    <div id="interview-choices"></div>
+    <button class="secondary" onclick="closeInterview()">Close</button>
+  </div>
 </div>
 
-<!-- NAVIGATION -->
+<!-- VACATION CLASS MODAL -->
+<div id="travel-modal" class="modal hidden">
+  <div class="modal-content">
+    <h3 id="travel-title">Choose Travel Class</h3>
+    <p id="travel-desc">Pick how you want to travel.</p>
+    <button onclick="confirmTravel('Economy')" class="secondary">Economy – cheapest, normal happiness</button>
+    <button onclick="confirmTravel('Business')" class="secondary">Business – more expensive, extra happiness</button>
+    <button onclick="confirmTravel('First')" class="secondary">First Class – very expensive, big happiness</button>
+    <button class="secondary" onclick="closeTravel()">Cancel</button>
+  </div>
+</div>
 
 <nav>
-    <button onclick="switchScreen('home')">🏠</button>
-    <button onclick="switchScreen('mall')">🛍️</button>
-    <button onclick="switchScreen('jobs')">💼</button>
-    <button onclick="switchScreen('profile')">👤</button>
+  <button onclick="focusHome()">🏠</button>
+  <button onclick="focusMall()">🛍️</button>
+  <button onclick="focusJobs()">💼</button>
+  <button onclick="focusProfile()">👤</button>
 </nav>
 
 <script>
 /* ---------- STATE ---------- */
-
 let day = 1;
 let money = 50;
 let happiness = 50;
-let house = { name: "Tiny Studio", rent: 50 };
+let house = { name: "Tiny Studio", tier: 1 };
 let job = null;
+let inventory = [];
+let houseItems = [];
+let playerPos = { x: 0, y: 2 }; // world grid position
 
-/* ---------- DATA ---------- */
+/* WORLD LAYOUT (5x5) */
+const worldWidth = 5;
+const worldHeight = 5;
+// simple labels for tiles
+// H = house area, M = mall entrance, F = fashion, B = beauty, C = cafe/cinema, J = job centre, V = vacation, R = road
+const worldMap = [
+  ["R","R","V","R","R"],
+  ["R","F","M","B","R"],
+  ["H","R","R","R","J"],
+  ["R","R","C","R","R"],
+  ["R","R","R","R","R"]
+];
 
-const floors = {
-    ground: [
-        { name: "Superdrug Essentials", price: 18, happiness: 2 },
-        { name: "Primark Outfit", price: 30, happiness: 3 },
-        { name: "Boots Skincare Set", price: 42, happiness: 4 }
-    ],
-    middle: [
-        { name: "Zara Outfit", price: 90, happiness: 5 },
-        { name: "River Island Jacket", price: 110, happiness: 6 },
-        { name: "Shoe Store Trainers", price: 75, happiness: 4 }
-    ],
-    top: [
-        { name: "Cinema Ticket", price: 15, happiness: 5 },
-        { name: "Café Latte & Cake", price: 9, happiness: 3 },
-        { name: "Arcade Tokens", price: 12, happiness: 4 }
+/* DATA: SHOPS */
+const shops = {
+  F: { // fashion
+    name: "Fashion Wing",
+    items: [
+      { name: "Zara Outfit", price: 90, happiness: 5 },
+      { name: "River Island Jacket", price: 110, happiness: 6 },
+      { name: "Sneaker Store Trainers", price: 80, happiness: 4 }
     ]
+  },
+  B: { // beauty / home
+    name: "Beauty & Home",
+    items: [
+      { name: "Boots Skincare Set", price: 40, happiness: 4 },
+      { name: "Home Store Lamp", price: 35, happiness: 3 },
+      { name: "Cosy Rug", price: 50, happiness: 4 }
+    ]
+  },
+  C: { // leisure
+    name: "Leisure Floor",
+    items: [
+      { name: "Cinema Ticket", price: 15, happiness: 5 },
+      { name: "Café Latte & Cake", price: 9, happiness: 3 },
+      { name: "Arcade Tokens", price: 12, happiness: 4 }
+    ]
+  },
+  M: { // ground essentials
+    name: "Ground Floor Essentials",
+    items: [
+      { name: "Superdrug Essentials", price: 18, happiness: 2 },
+      { name: "Primark Outfit", price: 30, happiness: 3 }
+    ]
+  }
 };
 
+/* DATA: JOBS (UNLOCKED BY TIER) */
 const jobs = [
-    {
-        id: "fast_food",
-        name: "Food Court Crew",
-        salary: 40,
-        location: "Top Floor · Food Court",
-        description: "Take orders, serve food and keep the area tidy.",
-        interview: {
-            question: "A customer is upset about a wrong order. What do you do?",
-            choices: [
-                { text: "Listen, apologise and fix the order quickly.", success: true },
-                { text: "Tell them it's not your problem.", success: false },
-                { text: "Ignore them and keep working.", success: false }
-            ]
-        }
-    },
-    {
-        id: "fashion",
-        name: "Fashion Store Assistant",
-        salary: 55,
-        location: "Middle Floor · Fashion Wing",
-        description: "Help customers find outfits and keep the store looking good.",
-        interview: {
-            question: "A customer can’t decide between two outfits. What do you do?",
-            choices: [
-                { text: "Ask questions about their style and suggest what suits them.", success: true },
-                { text: "Tell them to hurry up and choose.", success: false },
-                { text: "Walk away and tidy something else.", success: false }
-            ]
-        }
-    },
-    {
-        id: "cafe",
-        name: "Café Barista",
-        salary: 50,
-        location: "Top Floor · Café",
-        description: "Make drinks and chat with customers.",
-        interview: {
-            question: "What makes great customer service in a café?",
-            choices: [
-                { text: "Being friendly, accurate and remembering regulars.", success: true },
-                { text: "Only serving people you like.", success: false },
-                { text: "Doing the bare minimum.", success: false }
-            ]
-        }
-    },
-    {
-        id: "cinema",
-        name: "Cinema Staff",
-        salary: 48,
-        location: "Top Floor · Cinema",
-        description: "Sell tickets and snacks, check tickets at the door.",
-        interview: {
-            question: "There’s a long queue before a big film. What do you do?",
-            choices: [
-                { text: "Stay calm, work quickly and keep people informed.", success: true },
-                { text: "Complain loudly about how busy it is.", success: false },
-                { text: "Hide in the back until it’s quieter.", success: false }
-            ]
-        }
+  {
+    id: "food_court",
+    name: "Food Court Crew",
+    salary: 40,
+    tierRequired: 1,
+    description: "Starter job in the food court.",
+    interview: {
+      question: "A customer is upset about a wrong order. What do you do?",
+      choices: [
+        { text: "Listen, apologise and fix it quickly.", success: true },
+        { text: "Tell them it’s not your fault.", success: false },
+        { text: "Ignore them and keep working.", success: false }
+      ]
     }
+  },
+  {
+    id: "fashion_assistant",
+    name: "Fashion Store Assistant",
+    salary: 60,
+    tierRequired: 2,
+    description: "Help customers choose outfits.",
+    interview: {
+      question: "A customer can’t decide between two outfits. What do you do?",
+      choices: [
+        { text: "Ask about their style and suggest what suits them.", success: true },
+        { text: "Tell them to hurry up.", success: false },
+        { text: "Walk away and tidy something else.", success: false }
+      ]
+    }
+  },
+  {
+    id: "cafe_barista",
+    name: "Café Barista",
+    salary: 70,
+    tierRequired: 3,
+    description: "Make drinks and chat with customers.",
+    interview: {
+      question: "What makes great service in a café?",
+      choices: [
+        { text: "Being friendly, accurate and remembering regulars.", success: true },
+        { text: "Only serving people you like.", success: false },
+        { text: "Doing the bare minimum.", success: false }
+      ]
+    }
+  }
 ];
 
+/* DATA: HOUSES (TIER PROGRESSION) */
 const houses = [
-    { name: "Tiny Studio", cost: 0, description: "Small but affordable." },
-    { name: "Small Apartment", cost: 300, description: "A bit more space and comfort." },
-    { name: "Townhouse", cost: 900, description: "Plenty of room and nicer area." },
-    { name: "City View Apartment", cost: 1500, description: "Modern flat with a great view." }
+  { name: "Tiny Studio", cost: 0, tier: 1, description: "Small but yours." },
+  { name: "Small Apartment", cost: 300, tier: 2, description: "More space and nicer area." },
+  { name: "Townhouse", cost: 900, tier: 3, description: "Plenty of room and style." },
+  { name: "City View Apartment", cost: 1500, tier: 4, description: "Modern flat with a view." }
 ];
 
+/* DATA: VACATIONS (UNLOCKED BY TIER) */
 const vacations = [
-    { name: "Brighton Weekend", cost: 150, happiness: 10, description: "Sea, chips and arcades." },
-    { name: "Paris City Break", cost: 450, happiness: 20, description: "Cafés, museums and shopping." },
-    { name: "Island Getaway", cost: 1200, happiness: 35, description: "Sun, beaches and total chill." }
+  { name: "Brighton Weekend", baseCost: 150, baseHappy: 10, tierRequired: 1 },
+  { name: "Paris City Break", baseCost: 450, baseHappy: 20, tierRequired: 2 },
+  { name: "Island Getaway", baseCost: 1200, baseHappy: 35, tierRequired: 3 }
 ];
+
+let pendingVacation = null; // for travel class modal
 
 /* ---------- UI HELPERS ---------- */
-
 function updateStats() {
-    const moneyEl = document.getElementById("money");
-    moneyEl.textContent = money;
-    moneyEl.classList.remove("pulse");
-    void moneyEl.offsetWidth;
-    moneyEl.classList.add("pulse");
+  const moneyEl = document.getElementById("money");
+  moneyEl.textContent = money;
+  moneyEl.classList.remove("pulse");
+  void moneyEl.offsetWidth;
+  moneyEl.classList.add("pulse");
 
-    document.getElementById("happiness").textContent = happiness;
-    document.getElementById("house").textContent = house.name;
-    document.getElementById("job").textContent = job ? job.name : "Unemployed";
-
-    document.getElementById("profile-money").textContent = money;
-    document.getElementById("profile-happiness").textContent = happiness;
-    document.getElementById("profile-house").textContent = house.name;
-    document.getElementById("profile-job").textContent = job ? job.name : "Unemployed";
-
-    document.getElementById("day-text").textContent = `Day ${day} · Life in the mall continues.`;
+  document.getElementById("happiness").textContent = happiness;
+  document.getElementById("house").textContent = house.name;
+  document.getElementById("job").textContent = job ? job.name : "Unemployed";
 }
 
-function switchScreen(name) {
-    document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
-    document.getElementById(`screen-${name}`).classList.add("active");
-}
+function renderInventory() {
+  const inv = document.getElementById("inventory-list");
+  const houseInv = document.getElementById("house-items-list");
+  inv.innerHTML = "<h3 style='font-size:14px;margin:4px 0;'>Inventory</h3>";
+  houseInv.innerHTML = "<h3 style='font-size:14px;margin:4px 0;'>In Your House</h3>";
 
-/* ---------- NAV SHORTCUTS ---------- */
-
-function openMall() {
-    switchScreen("mall");
-    showFloor("ground");
-}
-
-function openJobCentre() {
-    switchScreen("jobs");
-    renderJobs();
-}
-
-function openHouses() {
-    switchScreen("houses");
-    renderHouses();
-}
-
-function openVacations() {
-    switchScreen("vacations");
-    renderVacations();
-}
-
-/* ---------- WORK ---------- */
-
-function goWork() {
-    if (!job) {
-        alert("You don’t have a job yet. Go to the Mall Job Centre to apply.");
-        openJobCentre();
-        return;
-    }
-    money += job.salary;
-    happiness -= 2;
-    if (happiness < 0) happiness = 0;
-    day += 1;
-    alert(`You worked as ${job.name} and earned £${job.salary}.`);
-    updateStats();
-}
-
-/* ---------- MALL / SHOPS ---------- */
-
-function setActiveFloorOnMap(floor) {
-    document.getElementById("map-ground").classList.remove("active-floor");
-    document.getElementById("map-middle").classList.remove("active-floor");
-    document.getElementById("map-top").classList.remove("active-floor");
-    if (floor === "ground") document.getElementById("map-ground").classList.add("active-floor");
-    if (floor === "middle") document.getElementById("map-middle").classList.add("active-floor");
-    if (floor === "top") document.getElementById("map-top").classList.add("active-floor");
-}
-
-function showFloor(floor) {
-    setActiveFloorOnMap(floor);
-    const area = document.getElementById("shops");
-    area.innerHTML = "";
-    floors[floor].forEach(item => {
-        const div = document.createElement("div");
-        div.className = "card";
-        div.innerHTML = `
-            <h3>${item.name}</h3>
-            <p>Price: £${item.price}</p>
-            <p>Happiness: +${item.happiness}</p>
-            <button class="primary" onclick="buyItem(${item.price}, ${item.happiness}, '${item.name.replace(/'/g, "\\'")}')">Buy</button>
-        `;
-        area.appendChild(div);
+  if (inventory.length === 0) {
+    inv.innerHTML += "<p style='font-size:12px;'>No items yet.</p>";
+  } else {
+    inventory.forEach((item, idx) => {
+      inv.innerHTML += `
+        <div class="item-card">
+          <strong>${item.name}</strong> – £${item.price}
+          <button class="secondary" onclick="placeInHouse(${idx})">Place in House</button>
+        </div>`;
     });
-}
+  }
 
-function buyItem(price, happy, name) {
-    if (money < price) {
-        alert("You can’t afford that right now.");
-        return;
-    }
-    money -= price;
-    happiness += happy;
-    if (happiness > 100) happiness = 100;
-    alert(`You bought ${name}.`);
-    updateStats();
-}
-
-/* ---------- JOB CENTRE / INTERVIEWS ---------- */
-
-function renderJobs() {
-    const list = document.getElementById("job-list");
-    list.innerHTML = "";
-    jobs.forEach(j => {
-        const div = document.createElement("div");
-        div.className = "card";
-        div.innerHTML = `
-            <h3>${j.name}</h3>
-            <p>${j.location}</p>
-            <p>Salary: £${j.salary} per work day</p>
-            <p>${j.description}</p>
-            <button class="primary" onclick="startInterview('${j.id}')">Apply / Interview</button>
-        `;
-        list.appendChild(div);
+  if (houseItems.length === 0) {
+    houseInv.innerHTML += "<p style='font-size:12px;'>No items placed yet.</p>";
+  } else {
+    houseItems.forEach(item => {
+      houseInv.innerHTML += `<div class="item-card">${item.name} is in your house.</div>`;
     });
+  }
+}
+
+function placeInHouse(index) {
+  const item = inventory.splice(index, 1)[0];
+  houseItems.push(item);
+  alert(`You placed ${item.name} in your house to try it out.`);
+  renderInventory();
+}
+
+/* ---------- WORLD RENDERING ---------- */
+function renderWorld() {
+  const worldEl = document.getElementById("world");
+  worldEl.innerHTML = "";
+  for (let y = 0; y < worldHeight; y++) {
+    for (let x = 0; x < worldWidth; x++) {
+      const code = worldMap[y][x];
+      const tile = document.createElement("div");
+      tile.className = "tile";
+      if (code === "H") tile.classList.add("house");
+      if (code === "M" || code === "F" || code === "B" || code === "C") tile.classList.add("mall");
+      if (code === "J") tile.classList.add("job");
+      if (code === "V") tile.classList.add("vacation");
+      if (code === "R") tile.classList.add("road");
+
+      let label = "";
+      if (code === "H") label = "Your House";
+      if (code === "M") label = "Mall Entrance";
+      if (code === "F") label = "Fashion";
+      if (code === "B") label = "Beauty & Home";
+      if (code === "C") label = "Leisure";
+      if (code === "J") label = "Job Centre";
+      if (code === "V") label = "Vacations";
+      if (code === "R") label = "Road";
+
+      tile.innerHTML = `<div class="label">${label}</div>`;
+      tile.onclick = () => movePlayer(x, y);
+
+      if (playerPos.x === x && playerPos.y === y) {
+        const p = document.createElement("div");
+        p.className = "player";
+        tile.appendChild(p);
+      }
+
+      worldEl.appendChild(tile);
+    }
+  }
+}
+
+/* ---------- MOVEMENT & CONTEXT ---------- */
+function movePlayer(x, y) {
+  playerPos = { x, y };
+  renderWorld();
+  updateContext();
+}
+
+function updateContext() {
+  const code = worldMap[playerPos.y][playerPos.x];
+  const titleEl = document.getElementById("context-title");
+  const textEl = document.getElementById("context-text");
+  const actionsEl = document.getElementById("context-actions");
+  actionsEl.innerHTML = "";
+
+  if (code === "H") {
+    titleEl.textContent = "🏠 Your House";
+    textEl.textContent = "You can relax here, place furniture and feel how your life is improving.";
+    actionsEl.innerHTML = `
+      <button class="secondary" onclick="restAtHome()">Rest (+happiness)</button>
+      <button class="ghost" onclick="openHouseOptions()">View House Upgrades</button>
+    `;
+  } else if (code === "M") {
+    titleEl.textContent = "🛍️ Mall Entrance";
+    textEl.textContent = "From here you can walk to different parts of the mall.";
+    actionsEl.innerHTML = `
+      <button class="secondary" onclick="moveToCode('F')">Go to Fashion</button>
+      <button class="secondary" onclick="moveToCode('B')">Go to Beauty & Home</button>
+      <button class="secondary" onclick="moveToCode('C')">Go to Leisure</button>
+      <button class="ghost" onclick="moveToCode('J')">Go to Job Centre</button>
+    `;
+  } else if (code === "F" || code === "B" || code === "C" || code === "M") {
+    const shop = shops[code];
+    titleEl.textContent = `🛒 ${shop.name}`;
+    textEl.textContent = "Browse items you’d find in real shops and take them home.";
+    shop.items.forEach((item, idx) => {
+      const div = document.createElement("div");
+      div.className = "shop-card";
+      div.innerHTML = `
+        <strong>${item.name}</strong><br>
+        Price: £${item.price} · Happiness: +${item.happiness}<br>
+        <button class="primary" onclick="buyShopItem('${code}', ${idx})">Buy</button>
+      `;
+      actionsEl.appendChild(div);
+    });
+  } else if (code === "J") {
+    titleEl.textContent = "💼 Mall Job Centre";
+    textEl.textContent = "Apply for jobs. Better houses and items unlock better job options.";
+    renderJobOptions(actionsEl);
+  } else if (code === "V") {
+    titleEl.textContent = "✈️ Vacations Desk";
+    textEl.textContent = "Plan trips with Economy, Business or First Class travel.";
+    renderVacationOptions(actionsEl);
+  } else {
+    titleEl.textContent = "🚶 Road";
+    textEl.textContent = "You’re walking between places.";
+    actionsEl.innerHTML = `<button class="secondary" onclick="moveToCode('M')">Head to the Mall Entrance</button>`;
+  }
+}
+
+function moveToCode(targetCode) {
+  // simple: find first tile with that code and move there
+  for (let y = 0; y < worldHeight; y++) {
+    for (let x = 0; x < worldWidth; x++) {
+      if (worldMap[y][x] === targetCode) {
+        movePlayer(x, y);
+        return;
+      }
+    }
+  }
+}
+
+/* ---------- HOME / REST / HOUSES ---------- */
+function restAtHome() {
+  happiness += 5;
+  if (happiness > 100) happiness = 100;
+  day += 1;
+  alert("You rested at home and feel a bit better.");
+  updateStats();
+}
+
+function openHouseOptions() {
+  moveToCode("H");
+  const actionsEl = document.getElementById("context-actions");
+  actionsEl.innerHTML = "";
+  const titleEl = document.getElementById("context-title");
+  const textEl = document.getElementById("context-text");
+  titleEl.textContent = "🏠 House Upgrades";
+  textEl.textContent = "Move into better homes as you earn more. Better homes unlock better jobs and vacations.";
+
+  houses.forEach(h => {
+    const div = document.createElement("div");
+    div.className = "house-card";
+    const current = h.name === house.name;
+    div.innerHTML = `
+      <strong>${h.name}</strong> (Tier ${h.tier})<br>
+      ${h.description}<br>
+      Move-in cost: £${h.cost}<br>
+      <button class="${current ? 'secondary' : 'primary'}" ${current ? 'disabled' : ''} onclick="buyHouse('${h.name}', ${h.cost}, ${h.tier})">
+        ${current ? 'Current Home' : 'Move Here'}
+      </button>
+    `;
+    actionsEl.appendChild(div);
+  });
+}
+
+function buyHouse(name, cost, tier) {
+  if (name === house.name) return;
+  if (money < cost) {
+    alert("You can’t afford that house yet.");
+    return;
+  }
+  money -= cost;
+  house = { name, tier };
+  alert(`You moved into ${name}. New tier: ${tier}. Better jobs and vacations will unlock.`);
+  updateStats();
+  openHouseOptions();
+}
+
+/* ---------- SHOP BUYING ---------- */
+function buyShopItem(code, index) {
+  const shop = shops[code];
+  const item = shop.items[index];
+  if (money < item.price) {
+    alert("You can’t afford that yet.");
+    return;
+  }
+  money -= item.price;
+  happiness += item.happiness;
+  if (happiness > 100) happiness = 100;
+  inventory.push(item);
+  alert(`You bought ${item.name}. It’s now in your inventory.`);
+  updateStats();
+  renderInventory();
+}
+
+/* ---------- JOBS & INTERVIEWS ---------- */
+function renderJobOptions(container) {
+  const tier = house.tier;
+  jobs.forEach(j => {
+    if (j.tierRequired <= tier) {
+      const div = document.createElement("div");
+      div.className = "job-card";
+      div.innerHTML = `
+        <strong>${j.name}</strong> (Tier ${j.tierRequired}+)<br>
+        Salary: £${j.salary} per work day<br>
+        ${j.description}<br>
+        <button class="primary" onclick="startInterview('${j.id}')">Apply / Interview</button>
+      `;
+      container.appendChild(div);
+    }
+  });
 }
 
 let currentInterviewJob = null;
 
 function startInterview(id) {
-    const j = jobs.find(x => x.id === id);
-    if (!j) return;
-    currentInterviewJob = j;
-
-    document.getElementById("interview-job-title").textContent = `Interview: ${j.name}`;
-    document.getElementById("interview-question").textContent = j.interview.question;
-
-    const choicesDiv = document.getElementById("interview-choices");
-    choicesDiv.innerHTML = "";
-    j.interview.choices.forEach((choice, index) => {
-        const btn = document.createElement("button");
-        btn.className = "secondary";
-        btn.textContent = choice.text;
-        btn.onclick = () => finishInterview(index);
-        choicesDiv.appendChild(btn);
-    });
-
-    document.getElementById("interview-modal").classList.remove("hidden");
+  const j = jobs.find(x => x.id === id);
+  if (!j) return;
+  currentInterviewJob = j;
+  document.getElementById("interview-job-title").textContent = `Interview: ${j.name}`;
+  document.getElementById("interview-question").textContent = j.interview.question;
+  const choicesDiv = document.getElementById("interview-choices");
+  choicesDiv.innerHTML = "";
+  j.interview.choices.forEach((choice, idx) => {
+    const btn = document.createElement("button");
+    btn.textContent = choice.text;
+    btn.onclick = () => finishInterview(idx);
+    choicesDiv.appendChild(btn);
+  });
+  document.getElementById("interview-modal").classList.remove("hidden");
 }
 
 function finishInterview(index) {
-    if (!currentInterviewJob) return;
-    const choice = currentInterviewJob.interview.choices[index];
-    if (choice.success) {
-        job = currentInterviewJob;
-        alert(`You passed the interview! You are now ${job.name}.`);
-    } else {
-        alert("You didn’t get the job this time.");
-    }
-    currentInterviewJob = null;
-    closeInterview();
-    updateStats();
+  const choice = currentInterviewJob.interview.choices[index];
+  if (choice.success) {
+    job = currentInterviewJob;
+    alert(`You got the job: ${job.name}!`);
+  } else {
+    alert("You didn’t get the job this time.");
+  }
+  currentInterviewJob = null;
+  closeInterview();
+  updateStats();
 }
 
 function closeInterview() {
-    document.getElementById("interview-modal").classList.add("hidden");
+  document.getElementById("interview-modal").classList.add("hidden");
 }
 
-/* ---------- HOUSES ---------- */
-
-function renderHouses() {
-    const list = document.getElementById("house-list");
-    list.innerHTML = "";
-    houses.forEach(h => {
-        const isCurrent = h.name === house.name;
-        const div = document.createElement("div");
-        div.className = "card";
-        div.innerHTML = `
-            <h3>${h.name}</h3>
-            <p>${h.description}</p>
-            <p>Move-in cost: £${h.cost}</p>
-            <button class="${isCurrent ? 'secondary' : 'primary'}" ${isCurrent ? 'disabled' : ''} onclick="buyHouse('${h.name.replace(/'/g, "\\'")}', ${h.cost})">
-                ${isCurrent ? 'Current Home' : 'Move Here'}
-            </button>
-        `;
-        list.appendChild(div);
-    });
-}
-
-function buyHouse(name, cost) {
-    if (name === house.name) return;
-    if (money < cost) {
-        alert("You can’t afford to move there yet.");
-        return;
+/* ---------- VACATIONS & TRAVEL CLASS ---------- */
+function renderVacationOptions(container) {
+  const tier = house.tier;
+  vacations.forEach(v => {
+    if (v.tierRequired <= tier) {
+      const div = document.createElement("div");
+      div.className = "vacation-card";
+      div.innerHTML = `
+        <strong>${v.name}</strong> (Tier ${v.tierRequired}+)<br>
+        Base cost: £${v.baseCost} · Base happiness: +${v.baseHappy}<br>
+        <button class="primary" onclick="openTravelClass('${v.name}', ${v.baseCost}, ${v.baseHappy})">
+          Book Trip
+        </button>
+      `;
+      container.appendChild(div);
     }
-    money -= cost;
-    house = { name, rent: 0 };
-    alert(`You moved into ${name}.`);
-    updateStats();
-    renderHouses();
+  });
 }
 
-/* ---------- VACATIONS ---------- */
-
-function renderVacations() {
-    const list = document.getElementById("vacation-list");
-    list.innerHTML = "";
-    vacations.forEach(v => {
-        const div = document.createElement("div");
-        div.className = "card";
-        div.innerHTML = `
-            <h3>${v.name}</h3>
-            <p>${v.description}</p>
-            <p>Cost: £${v.cost}</p>
-            <p>Happiness: +${v.happiness}</p>
-            <button class="primary" onclick="takeVacation(${v.cost}, ${v.happiness}, '${v.name.replace(/'/g, "\\'")}')">Go</button>
-        `;
-        list.appendChild(div);
-    });
+function openTravelClass(name, baseCost, baseHappy) {
+  pendingVacation = { name, baseCost, baseHappy };
+  document.getElementById("travel-title").textContent = `Travel to ${name}`;
+  document.getElementById("travel-desc").textContent = "Choose your travel class. Higher classes cost more but give more happiness.";
+  document.getElementById("travel-modal").classList.remove("hidden");
 }
 
-function takeVacation(cost, happy, name) {
-    if (money < cost) {
-        alert("You can’t afford this vacation yet.");
-        return;
-    }
-    money -= cost;
-    happiness += happy;
-    if (happiness > 100) happiness = 100;
-    day += 1;
-    alert(`You went on a trip to ${name}. You feel refreshed.`);
-    updateStats();
+function confirmTravel(cls) {
+  if (!pendingVacation) return;
+  let costMult = 1;
+  let happyMult = 1;
+  if (cls === "Economy") { costMult = 1; happyMult = 1; }
+  if (cls === "Business") { costMult = 1.6; happyMult = 1.3; }
+  if (cls === "First") { costMult = 2.3; happyMult = 1.6; }
+
+  const totalCost = Math.round(pendingVacation.baseCost * costMult);
+  const totalHappy = Math.round(pendingVacation.baseHappy * happyMult);
+
+  if (money < totalCost) {
+    alert("You can’t afford that travel class yet.");
+    return;
+  }
+
+  money -= totalCost;
+  happiness += totalHappy;
+  if (happiness > 100) happiness = 100;
+  day += 1;
+  alert(`You went to ${pendingVacation.name} in ${cls}. Happiness +${totalHappy}.`);
+  pendingVacation = null;
+  closeTravel();
+  updateStats();
+}
+
+function closeTravel() {
+  document.getElementById("travel-modal").classList.add("hidden");
+}
+
+/* ---------- NAV SHORTCUTS ---------- */
+function focusHome() {
+  moveToCode("H");
+}
+function focusMall() {
+  moveToCode("M");
+}
+function focusJobs() {
+  moveToCode("J");
+}
+function focusProfile() {
+  alert(`Day ${day}\nMoney: £${money}\nHappiness: ${happiness}\nHouse: ${house.name}\nJob: ${job ? job.name : "Unemployed"}`);
 }
 
 /* ---------- INIT ---------- */
-
+renderWorld();
 updateStats();
-showFloor("ground");
+renderInventory();
+updateContext();
 </script>
-
 </body>
 </html>
